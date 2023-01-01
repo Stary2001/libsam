@@ -1,0 +1,2 @@
+option('samd_variant', type : 'string', description : 'An option')
+option('samd_device', type : 'string', description : 'An option')
