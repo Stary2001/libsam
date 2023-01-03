@@ -1,63 +1,59 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include "sam/sercom_usart.h"
 
-int uart_putchar(uint8_t c) {
-	// trust me
-	(void) c;
-	return 0;
+__attribute__((used)) void _init() {
 }
 
-void _init() {
-}
-
-void _sbrk() {
+__attribute__((used)) void _sbrk() {
 	// No malloc!
 }
 
-int _write (int fd, char *buf, int count) {
+__attribute__((used)) int _write (int fd, char *buf, int count) {
 	int written = 0;
 
 	(void)fd;
 
 	for (; count != 0; --count) {
-		if (uart_putchar((uint8_t)*buf++)) {
+		/*if (uart_putchar((uint8_t)*buf++)) {
 			return -1;
-		}
+		}*/
+		uart_putchar((uint8_t)*buf++);
 		++written;
 	}
 	return written;
 }
 
-int _close() {
+__attribute__((used)) int _close() {
 	abort();
 }
 
-int _fstat() {
+__attribute__((used)) int _fstat() {
 	abort();
 }
 
-int _isatty() {
+__attribute__((used)) int _isatty() {
 	abort();
 }
 
-int _lseek() {
+__attribute__((used)) int _lseek() {
 	abort();
 }
 
-int _read() {
+__attribute__((used)) int _read() {
 	abort();
 }
 
-int _kill() {
+__attribute__((used)) int _kill() {
 	return 0;
 }
 
-int _getpid() {
+__attribute__((used)) int _getpid() {
 	return 0;
 }
 
-int _exit() {
+__attribute__((used)) int _exit() {
 	while(true) {
 		//
 	}

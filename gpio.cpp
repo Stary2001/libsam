@@ -44,3 +44,11 @@ void port_set_function(int n, int function) {
 	}
 	PORT->Group[0].PMUX[n/2].reg = value;
 }
+
+void port_set_pull_enable(int n, bool pulls) {
+	if(pulls) {
+		PORT->Group[0].PINCFG[n].reg |= PORT_PINCFG_PULLEN;
+	} else {
+		PORT->Group[0].PINCFG[n].reg &= ~PORT_PINCFG_PULLEN;
+	}
+}

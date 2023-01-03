@@ -1,5 +1,5 @@
 project('libsam',
-	['c'],
+	['c', 'cpp'],
 	default_options : [
 		'warning_level=3',
 		'werror=false',
@@ -30,9 +30,13 @@ samd_defines = ['-D__SAMD21E16BU__']
 
 sam = static_library('sam',
 	'newlib_syscalls.c',
-	'gpio.c',
+	'bod.cpp',
+	'clock.cpp',
+	'gpio.cpp',
+	'sercom_usart.cpp',
 	'samd21_pack/samd21b/gcc/gcc/startup_samd21.c',
 
 	c_args: samd_defines,
+	cpp_args: samd_defines,
 	include_directories: [samd_headers, cmsis_headers, our_headers]
 )
