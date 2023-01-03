@@ -114,6 +114,7 @@ void TCC3_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler
 
 /* Exception Table */
 __attribute__ ((section(".vectors")))
+__attribute__((used))
 const DeviceVectors exception_table = {
 
         /* Configure Initial Stack Pointer, using linker-generated symbols */
