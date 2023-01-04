@@ -1,6 +1,14 @@
+#include <stdio.h>
 #include "sam/clock.h"
 #include "sam/sercom_usart.h"
 #include "sam.h"
+
+uint16_t baud_rate_reg(uint32_t baud, uint32_t ref_clock) {
+	// baud = 65536 * (1-S*(fbaud/fref))
+	// baud = 65536-65536*S*fbaud/fref
+	// S (number of samples) = 16 in our config
+	return 65536ul - (65536ul * 16ul * baud) / ref_clock;
+}
 
 void uart_init() {
 	hack_clock_setup_sercom0();
@@ -47,5 +55,13 @@ void uart_init() {
 }
 
 void uart_putchar(char c) {
+	while(!SERCOM0->USART.INTFLAG.bit.DRE) {};
 	SERCOM0->USART.DATA.reg = c;
+}
+
+void uart_puts(const char *c) {
+	while(*c) {
+		uart_putchar(*c);
+		c++;
+	}
 }
