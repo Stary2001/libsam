@@ -33,6 +33,7 @@ sam = static_library('sam',
 	'bod.cpp',
 	'clock.cpp',
 	'gpio.cpp',
+	'pinmux.cpp',
 	'sercom_usart.cpp',
 	'samd21_pack/samd21b/gcc/gcc/startup_samd21.c',
 
