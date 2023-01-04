@@ -93,6 +93,7 @@ tinyusb_sources = [
 	'tinyusb/src/host/hub.c',
 	'tinyusb/src/host/usbh.c',
 ]
+siphash_headers = include_directories('SipHash')
 
 samd_defines = ['-D__SAMD21E16BU__']
 sam = static_library('sam',
@@ -102,10 +103,12 @@ sam = static_library('sam',
 	'gpio.cpp',
 	'pinmux.cpp',
 	'sercom_usart.cpp',
+	'serial_number.cpp',
+	'SipHash/siphash.c',
 	'samd21_pack/samd21b/gcc/gcc/startup_samd21.c',
 	tinyusb_sources,
 
 	c_args: samd_defines,
 	cpp_args: samd_defines,
-	include_directories: [samd_headers, cmsis_headers, our_headers, tinyusb_headers]
+	include_directories: [samd_headers, cmsis_headers, our_headers, tinyusb_headers, siphash_headers]
 )
