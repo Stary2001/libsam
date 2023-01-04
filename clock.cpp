@@ -122,15 +122,10 @@ void clock_setup_gclk2_8mhz() {
 	    GCLK_GENCTRL_SRC_OSC8M |
 	    /* Improve the duty cycle. */
 	    GCLK_GENCTRL_IDC |
-	    GCLK_GENCTRL_GENEN | 
-	    GCLK_GENCTRL_OE;
+	    GCLK_GENCTRL_GENEN;
 
 	/* Wait for the write to complete */
 	while(GCLK->STATUS.bit.SYNCBUSY) {};
-
-	PORT->Group[0].DIRSET.reg = (1 << 16);
-	PORT->Group[0].PINCFG[16].reg |= PORT_PINCFG_PMUXEN;
-	PORT->Group[0].PMUX[16 >> 1].bit.PMUXE |= PORT_PMUX_PMUXE_H;
 }
 
 /* todo: closed loop with external crystal */
@@ -141,6 +136,20 @@ void hack_clock_setup_sercom0() {
 	    GCLK_CLKCTRL_CLKEN |
 	    GCLK_CLKCTRL_GEN_GCLK2 |
 	    GCLK_CLKCTRL_ID_SERCOM0_CORE;
+
+	/* Wait for the write to complete. */
+	while (GCLK->STATUS.bit.SYNCBUSY) {};
+}
+
+void clock_setup_usb() {
+	PM->AHBMASK.reg |= PM_AHBMASK_USB;
+	PM->APBBMASK.reg |= PM_APBBMASK_USB;
+
+	/* Connect GCLK0 to USB */
+	GCLK->CLKCTRL.reg =
+	    GCLK_CLKCTRL_CLKEN |
+	    GCLK_CLKCTRL_GEN_GCLK0 |
+	    GCLK_CLKCTRL_ID_USB;
 
 	/* Wait for the write to complete. */
 	while (GCLK->STATUS.bit.SYNCBUSY) {};
