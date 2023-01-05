@@ -10,16 +10,16 @@ char fake_heap[0x800];
 static char *heap_start = fake_heap;
 static char *heap_end = NULL;
 
-__attribute__((used)) void* _sbrk(int amount) {
+__attribute__((used)) void* _sbrk(ptrdiff_t incr) {
 	char *prev_heap_end;
 
 	if(heap_end == NULL) {
 		heap_end = heap_start;
 	}
 	prev_heap_end = heap_end;
-	heap_end += amount;
+	heap_end += incr;
 
-	if((heap_end - heap_start) > sizeof(fake_heap)) {
+	if((unsigned int)(heap_end - heap_start) > sizeof(fake_heap)) {
 		// die
 		uart_puts("out of fixed heap\n");
 		abort();
@@ -28,25 +28,26 @@ __attribute__((used)) void* _sbrk(int amount) {
 	return prev_heap_end;
 }
 
-__attribute__((used)) int _write (int fd, char *buf, int count) {
-	int written = 0;
-
+__attribute__((used)) int _write(int fd, const void *buf, size_t nbytes) {
 	(void)fd;
 
-	for (; count != 0; --count) {
-		uart_putchar((uint8_t)*buf++);
-		++written;
+	const uint8_t *buf_char = (const uint8_t*)buf;
+
+	for (size_t i = 0; i < nbytes; i++) {
+		uart_putchar(buf_char[i]);
 	}
-	return written;
+	return nbytes;
 }
 
-__attribute__((used)) int _close() {
+__attribute__((used)) int _close(int fd) {
+	(void)fd;
+
 	uart_puts("_close stub\r\n");
 	abort();
 }
 
 #include <sys/stat.h>
-__attribute__((used)) int _fstat (int fd, struct stat *sbuf) {
+__attribute__((used)) int _fstat(int fd, struct stat *sbuf) {
 	if(fd == 0 || fd == 1 || fd == 2) {
 		sbuf->st_mode = S_IFCHR;
 	} else {
@@ -64,25 +65,36 @@ __attribute__((used)) int _isatty(int fd) {
 	}
 }
 
-__attribute__((used)) int _lseek() {
+__attribute__((used)) off_t _lseek(int fd, off_t offset, int whence) {
+	(void)fd;
+	(void)offset;
+	(void)whence;
+
 	uart_puts("_lseek stub\r\n");
 	abort();
 }
 
-__attribute__((used)) int _read() {
+__attribute__((used)) int _read(int fd, void *buf, size_t nbytes) {
+	(void)fd;
+	(void)buf;
+	(void)nbytes;
+
 	uart_puts("_read stub\r\n");
 	abort();
 }
 
-__attribute__((used)) int _kill() {
+__attribute__((used)) int _kill(pid_t pid, int sig) {
+	(void)pid;
+	(void)sig;
+
 	return 0;
 }
 
-__attribute__((used)) int _getpid() {
+__attribute__((used)) pid_t _getpid() {
 	return 0;
 }
 
-__attribute__((used)) int _exit() {
+__attribute__((used)) void _exit() {
 	while(true) {
 		//uart_puts("in _exit\n");
 	}

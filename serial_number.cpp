@@ -14,7 +14,7 @@ uint32_t *serial_get_raw() {
 	return serial_storage;
 }
 
-char *hex = "0123456789abcdef";
+const char *hex = "0123456789abcdef";
 
 static uint8_t serial_hash[17];
 uint8_t *serial_get_hash_hex() {
