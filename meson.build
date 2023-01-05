@@ -3,9 +3,6 @@ project('libsam',
 	default_options : [
 		'warning_level=3',
 		'werror=false',
-		# This project defaults to a release build
-		'debug=false',
-		'optimization=2',
 		# `build.*` options affect `native: true targets`
 		# plain options affect `native: false` targets.
 		'c_std=c11', 'build.c_std=c11',
