@@ -4,7 +4,8 @@
 	branch = 5.9.0
 [submodule "tinyusb"]
 	path = tinyusb
-	url = ./tinyusb
+	url = https://github.com/hathach/tinyusb_src.git
+	branch = 0.14.0
 [submodule "SipHash"]
 	path = SipHash
 	url = https://github.com/veorq/SipHash.git
