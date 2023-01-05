@@ -105,6 +105,7 @@ sam = static_library('sam',
 	'sercom_usart.cpp',
 	'serial_number.cpp',
 	'SipHash/siphash.c',
+	'SipHash/halfsiphash.c',
 	'samd21_pack/samd21b/gcc/gcc/startup_samd21.c',
 	tinyusb_sources,
 

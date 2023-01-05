@@ -1,5 +1,5 @@
 extern "C" {
-	#include "siphash.h"
+	#include "halfsiphash.h"
 }
 #include "sam/serial_number.h"
 
@@ -18,10 +18,10 @@ char *hex = "0123456789abcdef";
 
 static uint8_t serial_hash[17];
 uint8_t *serial_get_hash_hex() {
-	uint32_t *serial = serial_get_raw();
+	uint8_t *serial = (uint8_t*)serial_get_raw();
 
 	uint8_t hash_out[8];
-	siphash(serial, 16, serial, hash_out, 8);
+	halfsiphash(serial, 16, serial, hash_out, 8);
 
 	for(int i = 0; i < 8; i++) {
 		serial_hash[i*2] = hex[hash_out[i] & 0xf];
