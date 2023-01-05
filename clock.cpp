@@ -3,9 +3,13 @@
 
 // references: https://blog.thea.codes/understanding-the-sam-d21-clocks/
 
+static uint32_t current_clock_speed = 1000000;
+
 // Switch OSC8M to full speed
 void clock_switch_to_8mhz() {
 	SYSCTRL->OSC8M.bit.PRESC = 0x0;
+
+	current_clock_speed = 8000000;
 }
 
 void clock_switch_to_48mhz_open_loop() {
@@ -46,6 +50,8 @@ void clock_switch_to_48mhz_open_loop() {
 
 	/* Wait for the write to complete */
 	while(GCLK->STATUS.bit.SYNCBUSY);
+
+	current_clock_speed = 48000000;
 }
 
 void clock_switch_to_48mhz_from_usb() {
@@ -108,6 +114,8 @@ void clock_switch_to_48mhz_from_usb() {
 
 	/* Wait for the write to complete */
 	while(GCLK->STATUS.bit.SYNCBUSY) {};
+
+	current_clock_speed = 48000000;
 }
 
 void clock_setup_gclk2_8mhz() {
@@ -153,4 +161,8 @@ void clock_setup_usb() {
 
 	/* Wait for the write to complete. */
 	while (GCLK->STATUS.bit.SYNCBUSY) {};
+}
+
+void clock_setup_systick_1ms() {
+	SysTick_Config(current_clock_speed / 1000);
 }

@@ -10,6 +10,7 @@ void clock_switch_to_48mhz_from_usb();
 void clock_setup_gclk2_8mhz();
 void hack_clock_setup_sercom0();
 void clock_setup_usb();
+void clock_setup_systick_1ms();
 
 #ifdef __cplusplus
 }
