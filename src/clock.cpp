@@ -1,7 +1,8 @@
 #include "sam/clock.h"
 #include "sam.h"
 
-// references: https://blog.thea.codes/understanding-the-sam-d21-clocks/
+// clock code from:
+// https://blog.thea.codes/understanding-the-sam-d21-clocks/
 
 static uint32_t current_clock_speed = 1000000;
 
@@ -10,48 +11,6 @@ void clock_switch_to_8mhz() {
 	SYSCTRL->OSC8M.bit.PRESC = 0x0;
 
 	current_clock_speed = 8000000;
-}
-
-void clock_switch_to_48mhz_open_loop() {
-	/* Set the correct number of wait states for 48 MHz @ 3.3v */
-	NVMCTRL->CTRLB.bit.RWS = 1;
-
-	/* This works around a quirk in the hardware (errata 1.2.1) -
-	   the DFLLCTRL register must be manually reset to this value before
-	   configuration. */
-	while(!SYSCTRL->PCLKSR.bit.DFLLRDY);
-	SYSCTRL->DFLLCTRL.reg = SYSCTRL_DFLLCTRL_ENABLE;
-	while(!SYSCTRL->PCLKSR.bit.DFLLRDY);
-
-	/* Write the coarse and fine calibration from NVM. */
-	uint32_t coarse =
-		((*(uint32_t*)FUSES_DFLL48M_COARSE_CAL_ADDR) & FUSES_DFLL48M_COARSE_CAL_Msk) >> FUSES_DFLL48M_COARSE_CAL_Pos;
-	uint32_t fine =
-		((*(uint32_t*)FUSES_DFLL48M_FINE_CAL_ADDR) & FUSES_DFLL48M_FINE_CAL_Msk) >> FUSES_DFLL48M_FINE_CAL_Pos;
-
-	SYSCTRL->DFLLVAL.reg = SYSCTRL_DFLLVAL_COARSE(coarse) | SYSCTRL_DFLLVAL_FINE(fine);
-
-	/* Wait for the write to finish. */
-	while (!SYSCTRL->PCLKSR.bit.DFLLRDY) {};
-
-	/* Enable the DFLL */
-	SYSCTRL->DFLLCTRL.bit.ENABLE = 1;
-
-	/* Wait for the write to finish */
-	while (!SYSCTRL->PCLKSR.bit.DFLLRDY) {};
-
-	/* Setup GCLK0 using the DFLL @ 48 MHz */
-	GCLK->GENCTRL.reg =
-		GCLK_GENCTRL_ID(0) |
-		GCLK_GENCTRL_SRC_DFLL48M |
-		/* Improve the duty cycle. */
-		GCLK_GENCTRL_IDC |
-		GCLK_GENCTRL_GENEN;
-
-	/* Wait for the write to complete */
-	while(GCLK->STATUS.bit.SYNCBUSY);
-
-	current_clock_speed = 48000000;
 }
 
 void clock_switch_to_48mhz_from_usb() {

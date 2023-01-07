@@ -1,8 +1,8 @@
 #include "sam/bod.h"
 #include "sam.h"
 
+// bod code from:
 // https://blog.thea.codes/sam-d21-brown-out-detector/
-// <3
 
 void bod_init() {
 	/* Disable the brown-out detector during configuration,
