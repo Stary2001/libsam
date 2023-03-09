@@ -6,7 +6,7 @@
 __attribute__((used)) void _init() {
 }
 
-char fake_heap[0x800];
+char fake_heap[1];
 static char *heap_start = fake_heap;
 static char *heap_end = NULL;
 
@@ -95,7 +95,6 @@ __attribute__((used)) pid_t _getpid() {
 }
 
 __attribute__((used)) void _exit() {
-	while(true) {
-		//uart_puts("in _exit\n");
-	}
+	uart_puts("in _exit\n");
+	while(true) {}
 }
