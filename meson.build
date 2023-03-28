@@ -14,12 +14,20 @@ project('libsam',
 	version: '1.0'
 )
 
-samd_variant = get_option('samd_variant')
 samd_device = get_option('samd_device')
-assert(samd_variant != '', 'Please specify samd_variant')
 assert(samd_device != '', 'Please specify samd_device')
 
-samd_headers = include_directories('samd21_pack/'+samd_variant+'/include')
+if samd_device.startswith('SAMD21')
+	samd_dir = 'samd21_pack/samd21b'
+	samd_variant_startup_c = 'samd21_pack/samd21b/gcc/gcc/startup_samd21.c'
+elif samd_device.startswith('SAMD11')
+	samd_dir = 'samd11_pack'
+	samd_variant_startup_c = 'samd11_pack/gcc/gcc/startup_samd11.c'
+else
+	// fail
+endif
+
+samd_headers = include_directories(samd_dir+'/include')
 cmsis_headers = include_directories('CMSIS_5/CMSIS/Core/Include/')
 our_headers = include_directories('include')
 
@@ -92,7 +100,7 @@ tinyusb_sources = [
 ]
 siphash_headers = include_directories('SipHash')
 
-samd_defines = ['-D__SAMD21E16BU__']
+samd_defines = ['-D__'+samd_device.to_upper()+'__']
 sam = static_library('sam',
 	'src/newlib_syscalls.c',
 	'src/bod.cpp',
@@ -103,7 +111,7 @@ sam = static_library('sam',
 	'src/serial_number.cpp',
 	'SipHash/siphash.c',
 	'SipHash/halfsiphash.c',
-	'samd21_pack/samd21b/gcc/gcc/startup_samd21.c',
+	samd_variant_startup_c,
 	tinyusb_sources,
 
 	c_args: samd_defines,
