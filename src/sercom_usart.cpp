@@ -7,7 +7,7 @@ uint16_t baud_rate_reg(uint32_t baud, uint32_t ref_clock) {
 	// baud = 65536 * (1-S*(fbaud/fref))
 	// baud = 65536-65536*S*fbaud/fref
 	// S (number of samples) = 16 in our config
-	return 65536ul - (65536ul * 16ul * baud) / ref_clock;
+	return 65536ul - (16ul * baud) / (ref_clock / 65536);
 }
 
 void uart_init() {
@@ -43,7 +43,7 @@ void uart_init() {
 	// sampr = 0 => 16x, arithmetic
 
 	// set baud
-	SERCOM0->USART.BAUD.reg = 50435; // hardcoded for 115200
+	SERCOM0->USART.BAUD.reg = baud_rate_reg(115200, 8000000);
 
 	SERCOM0->USART.CTRLB.reg |= SERCOM_USART_CTRLB_TXEN | SERCOM_USART_CTRLB_RXEN;
 	// No sync if uart is disabled
