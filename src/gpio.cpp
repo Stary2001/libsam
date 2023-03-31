@@ -38,8 +38,10 @@ void port_set_pmux_enable(int n, bool enable) {
 void port_set_function(int n, int function) {
 	uint8_t value = PORT->Group[0].PMUX[n/2].reg;
 	if(n&1) {
+		// PMUX O
 		value = (value & 0x0f) | ((function & 0xf) << 4);
 	} else {
+		// PMUX E
 		value = (value & 0xf0) | (function & 0xf);
 	}
 	PORT->Group[0].PMUX[n/2].reg = value;

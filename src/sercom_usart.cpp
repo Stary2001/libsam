@@ -3,7 +3,7 @@
 #include "sam/sercom_usart.h"
 #include "sam.h"
 
-uint16_t baud_rate_reg(uint32_t baud, uint32_t ref_clock) {
+static uint16_t baud_rate_reg(uint32_t baud, uint32_t ref_clock) {
 	// baud = 65536 * (1-S*(fbaud/fref))
 	// baud = 65536-65536*S*fbaud/fref
 	// S (number of samples) = 16 in our config

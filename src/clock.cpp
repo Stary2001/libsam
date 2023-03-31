@@ -107,6 +107,37 @@ void hack_clock_setup_sercom0() {
 	/* Wait for the write to complete. */
 	while (GCLK->STATUS.bit.SYNCBUSY) {};
 }
+void hack_clock_setup_sercom1() {
+	/* Connect GCLK2 to SERCOM1 */
+	GCLK->CLKCTRL.reg =
+	    GCLK_CLKCTRL_CLKEN |
+	    GCLK_CLKCTRL_GEN_GCLK2 |
+	    GCLK_CLKCTRL_ID_SERCOM1_CORE;
+
+	/* Wait for the write to complete. */
+	while (GCLK->STATUS.bit.SYNCBUSY) {};
+}
+void hack_clock_setup_sercom2() {
+	/* Connect GCLK2 to SERCOM1 */
+	GCLK->CLKCTRL.reg =
+	    GCLK_CLKCTRL_CLKEN |
+	    GCLK_CLKCTRL_GEN_GCLK2 |
+	    GCLK_CLKCTRL_ID_SERCOM2_CORE;
+
+	/* Wait for the write to complete. */
+	while (GCLK->STATUS.bit.SYNCBUSY) {};
+}
+void hack_clock_setup_adc() {
+	/* Connect GCLK2 to adc */
+	GCLK->CLKCTRL.reg =
+	    GCLK_CLKCTRL_CLKEN |
+	    GCLK_CLKCTRL_GEN_GCLK2 |
+	    GCLK_CLKCTRL_ID_ADC;
+
+	/* Wait for the write to complete. */
+	while (GCLK->STATUS.bit.SYNCBUSY) {};
+}
+
 
 void clock_setup_usb() {
 	PM->AHBMASK.reg |= PM_AHBMASK_USB;

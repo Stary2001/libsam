@@ -6,7 +6,7 @@ project('libsam',
 		# `build.*` options affect `native: true targets`
 		# plain options affect `native: false` targets.
 		'c_std=c11', 'build.c_std=c11',
-		'cpp_std=c++11', 'build.cpp_std=c++11',
+		'cpp_std=c++17', 'build.cpp_std=c++17',
 		'default_library=static'
 	],
 	license: 'MIT',
@@ -103,11 +103,13 @@ siphash_headers = include_directories('SipHash')
 samd_defines = ['-D__'+samd_device.to_upper()+'__']
 sam = static_library('sam',
 	'src/newlib_syscalls.c',
+	'src/adc.cpp',
 	'src/bod.cpp',
 	'src/clock.cpp',
 	'src/gpio.cpp',
 	'src/pinmux.cpp',
 	'src/sercom_usart.cpp',
+	'src/sercom_spi.cpp',
 	'src/serial_number.cpp',
 	'SipHash/siphash.c',
 	'SipHash/halfsiphash.c',
