@@ -98,3 +98,12 @@ __attribute__((used)) void _exit() {
 	uart_puts("in _exit\n");
 	while(true) {}
 }
+
+// Add a definition of __assert_func that doesn't print.
+void __assert_func (const char *file,
+        int line,
+        const char *func,
+        const char *failedexpr)
+{
+  abort();
+}

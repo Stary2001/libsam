@@ -138,7 +138,28 @@ void hack_clock_setup_adc() {
 	while (GCLK->STATUS.bit.SYNCBUSY) {};
 }
 
+#ifdef SAMD11
+void hack_clock_setup_tcs() {
+	/* Connect GCLK2 to TCs */
+	GCLK->CLKCTRL.reg =
+	    GCLK_CLKCTRL_CLKEN |
+	    GCLK_CLKCTRL_GEN_GCLK2 |
+	    GCLK_CLKCTRL_ID_TC1_TC2;
 
+	/* Wait for the write to complete. */
+	while (GCLK->STATUS.bit.SYNCBUSY) {};
+}
+void hack_clock_setup_tcc0() {
+	/* Connect GCLK0 to TCs! */
+	GCLK->CLKCTRL.reg =
+	    GCLK_CLKCTRL_CLKEN |
+	    GCLK_CLKCTRL_GEN_GCLK0 |
+	    GCLK_CLKCTRL_ID_TCC0;
+
+	/* Wait for the write to complete. */
+	while (GCLK->STATUS.bit.SYNCBUSY) {};
+}
+#endif
 void clock_setup_usb() {
 	PM->AHBMASK.reg |= PM_AHBMASK_USB;
 	PM->APBBMASK.reg |= PM_APBBMASK_USB;

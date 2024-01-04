@@ -12,6 +12,8 @@ void hack_clock_setup_sercom0();
 void hack_clock_setup_sercom1();
 void hack_clock_setup_sercom2();
 void hack_clock_setup_adc();
+void hack_clock_setup_tcs();
+void hack_clock_setup_tcc0();
 void clock_setup_usb();
 void clock_setup_systick_1ms();
 
