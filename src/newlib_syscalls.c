@@ -105,5 +105,10 @@ void __assert_func (const char *file,
         const char *func,
         const char *failedexpr)
 {
-  abort();
+	(void)file;
+	(void)line;
+	(void)func;
+	(void)failedexpr;
+
+	abort();
 }
