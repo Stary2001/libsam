@@ -22,8 +22,8 @@ template<int N> void SercomUart<N>::init(unsigned int txpo, unsigned int rxpo) {
 
 	sercom_ptr->USART.CTRLA.reg = SERCOM_USART_CTRLA_MODE(SERCOM_USART_CTRLA_MODE_USART_INT_CLK_Val) |
 	// cmode = 0
-	SERCOM_USART_CTRLA_RXPO(1) |
-	SERCOM_USART_CTRLA_TXPO(0) |
+	SERCOM_USART_CTRLA_RXPO(rxpo) |
+	SERCOM_USART_CTRLA_TXPO(txpo) |
 	SERCOM_USART_CTRLA_DORD |
 	SERCOM_USART_CTRLA_FORM(1);
 	// sampr = 0
