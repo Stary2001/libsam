@@ -108,7 +108,7 @@ siphash_headers = include_directories('SipHash')
 
 samd_defines += ['-D__'+samd_device.to_upper()+'__']
 sam = static_library('sam',
-	'src/newlib_syscalls.c',
+	'src/newlib_syscalls.cpp',
 	'src/adc.cpp',
 	'src/bod.cpp',
 	'src/clock.cpp',
