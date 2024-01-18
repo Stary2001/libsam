@@ -6,10 +6,8 @@
 class ADCClass {
 public:
 	void init();
-	void select(int n);
+	void select(unsigned int n);
 	uint16_t read();
-private:
-	void send_byte(uint8_t c);
 };
 
 extern "C" {
