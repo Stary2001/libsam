@@ -20,12 +20,15 @@ assert(samd_device != '', 'Please specify samd_device')
 samd_variant = get_option('samd_variant')
 assert(samd_variant != '', 'Please specify samd_variant')
 
+samd_defines = []
 if samd_device.startswith('SAMD21')
 	samd_dir = 'samd21_pack/' + samd_variant
 	samd_variant_startup_c = 'samd21_pack/' + samd_variant + '/gcc/gcc/startup_samd21.c'
+	samd_defines += ['-DSAMD21']
 elif samd_device.startswith('SAMD11')
 	samd_dir = 'samd11_pack'
 	samd_variant_startup_c = 'samd11_pack/gcc/gcc/startup_samd11.c'
+	samd_defines += ['-DSAMD11']
 else
 	// fail
 endif
@@ -103,7 +106,7 @@ tinyusb_sources = [
 ]
 siphash_headers = include_directories('SipHash')
 
-samd_defines = ['-D__'+samd_device.to_upper()+'__']
+samd_defines += ['-D__'+samd_device.to_upper()+'__']
 sam = static_library('sam',
 	'src/newlib_syscalls.c',
 	'src/adc.cpp',
