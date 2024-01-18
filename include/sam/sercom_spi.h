@@ -4,8 +4,6 @@
 
 #include "sam.h"
 
-#ifdef __cplusplus
-
 template<int N> constexpr Sercom * get_sercom_ptr() {
 	static_assert(N < 3);
 
@@ -31,12 +29,5 @@ private:
 	void send_byte(uint8_t c);
 };
 
-extern "C" {
-#endif
-
 void spi_init();
 void spi_transfer();
-
-#ifdef __cplusplus
-}
-#endif
