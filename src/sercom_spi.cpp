@@ -59,14 +59,14 @@ template<int N> void SercomSPI<N>::send_byte(uint8_t c) {
 }
 
 template<int N> void SercomSPI<N>::transfer(uint8_t *data, size_t length) {
-	port_set_value(16, false);
+	port_set_value(PORT_A, 16, false);
 	for(size_t i = 0; i < length; i++) {
 		send_byte(data[i]);
 	}
 
 	// Wait for end of transfer before releasing CS.
 	while(!sercom_ptr->SPI.INTFLAG.bit.TXC) {};
-	port_set_value(16, true);
+	port_set_value(PORT_A, 16, true);
 }
 
 template class SercomSPI<0>;

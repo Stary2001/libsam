@@ -160,6 +160,7 @@ void hack_clock_setup_tcc0() {
 	while (GCLK->STATUS.bit.SYNCBUSY) {};
 }
 #endif
+
 void clock_setup_usb() {
 	PM->AHBMASK.reg |= PM_AHBMASK_USB;
 	PM->APBBMASK.reg |= PM_APBBMASK_USB;

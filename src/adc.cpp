@@ -52,7 +52,7 @@ void ADCClass::init() {
 	ADC->CTRLA.bit.ENABLE = true;
 }
 
-void ADCClass::select(int n) {
+void ADCClass::select(unsigned int n) {
 	/* Configure the input parameters.
 
 	   - GAIN_DIV2 means that the input voltage is halved. This is important

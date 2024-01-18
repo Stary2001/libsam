@@ -2,15 +2,15 @@
 #include "sam/pinmux.h"
 
 void pinmux_setup_usb() {
-	port_set_direction(24, true);
-	port_set_direction(25, true);
-	port_set_value(24, false);
-	port_set_value(25, false);
-	port_set_pull_enable(24, false);
-	port_set_pull_enable(25, false);
+	port_set_direction(PORT_A, 24, true);
+	port_set_direction(PORT_A, 25, true);
+	port_set_value(PORT_A, 24, false);
+	port_set_value(PORT_A, 25, false);
+	port_set_pull_enable(PORT_A, 24, false);
+	port_set_pull_enable(PORT_A, 25, false);
 
-	port_set_pmux_enable(24, true);
-	port_set_pmux_enable(25, true);
-	port_set_function(24, 6); // G
-	port_set_function(25, 6); // G
+	port_set_pmux_enable(PORT_A, 24, true);
+	port_set_pmux_enable(PORT_A, 25, true);
+	port_set_function(PORT_A, 24, 6); // G
+	port_set_function(PORT_A, 25, 6); // G
 }
