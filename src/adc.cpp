@@ -1,10 +1,21 @@
 #include <stdio.h>
+#include <assert.h>
+
 #include "sam/clock.h"
 #include "sam/adc.h"
 #include "sam/gpio.h"
 #include "sam.h"
 
-void ADCClass::init() {
+// see datasheet table 33-3
+uint32_t avgres_value_for_average(int log2_average) {
+	if(log2_average <= 3) {
+		return ADC_AVGCTRL_ADJRES(log2_average);
+	} else {
+		return ADC_AVGCTRL_ADJRES(4);
+	}
+}
+
+void ADCClass::init(int log2_average, int samplen) {
 	hack_clock_setup_adc();
 
 	/* Enable the APB clock for the ADC. */
@@ -28,21 +39,20 @@ void ADCClass::init() {
 	*/
 	ADC->REFCTRL.reg = ADC_REFCTRL_REFSEL_INTVCC1;
 
-	/* Only capture one sample. The ADC can actually capture and average multiple
-	   samples for better accuracy, but there's no need to do that for this
-	   example.
-	*/
-	ADC->AVGCTRL.reg = ADC_AVGCTRL_SAMPLENUM_1;
+	ADC->AVGCTRL.reg = ADC_AVGCTRL_SAMPLENUM(log2_average) | avgres_value_for_average(log2_average);
 
-	/* Set the clock prescaler to 64, which will run the ADC at
-	   8 Mhz / 64 = 250 kHz.
-	   Set the resolution to 12bit.
+	/* Set the clock prescaler to 32, which will run the ADC at
+	   8 Mhz / 32 = 250 kHz.
+
+	   Set the resolution to 16bit.
+	   Datasheet 33.6.7:
+	   Note: To perform the averaging of two or more samples, the Conversion Result Resolution field in the Control B register (CTRLB.RESSEL) must be set to '1'
 	*/
-	ADC->CTRLB.reg = ADC_CTRLB_PRESCALER_DIV64 |
-	                 ADC_CTRLB_RESSEL_12BIT;
+	ADC->CTRLB.reg = ADC_CTRLB_PRESCALER_DIV32 |
+	                 ADC_CTRLB_RESSEL_16BIT;
 
 	// Set the sample time length to accommodate for input impedance.
-	ADC->SAMPCTRL.reg = ADC_SAMPCTRL_SAMPLEN(8);
+	ADC->SAMPCTRL.reg = ADC_SAMPCTRL_SAMPLEN(samplen);
 
 
 	/* Wait for bus synchronization. */
@@ -65,6 +75,7 @@ void ADCClass::select(unsigned int n) {
 	     This is A2 on the Feather M0 board.
 	*/
 
+
 	ADC->INPUTCTRL.reg = ADC_INPUTCTRL_GAIN_DIV2 |
 	                     ADC_INPUTCTRL_MUXNEG_GND |
 	                     ADC_INPUTCTRL_MUXPOS(n);
@@ -85,4 +96,22 @@ uint16_t ADCClass::read() {
 
 	/* Read the value. */
 	return ADC->RESULT.reg;
+}
+
+// scans from current adc input!
+void ADCClass::read_with_input_scan(uint16_t *values, unsigned int num) {
+	uint32_t value = ADC->INPUTCTRL.reg;
+	value &= ~(ADC_INPUTCTRL_INPUTSCAN_Msk | ADC_INPUTCTRL_INPUTOFFSET_Msk);
+	value |= ADC_INPUTCTRL_INPUTSCAN(num - 1) | ADC_INPUTCTRL_INPUTOFFSET(0);
+
+	// Wait for bus synchronization.
+	while (ADC->STATUS.bit.SYNCBUSY) {};
+	ADC->INPUTCTRL.reg = value;
+
+	for(unsigned int i = 0; i < num; i++) {
+		ADC->SWTRIG.bit.START = true;
+		while (ADC->INTFLAG.bit.RESRDY == 0);
+		ADC->INTFLAG.reg = ADC_INTFLAG_RESRDY;
+		values[i] = ADC->RESULT.reg;
+	}
 }
