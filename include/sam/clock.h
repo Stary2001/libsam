@@ -8,6 +8,7 @@ void clock_setup_gclk2_8mhz();
 void hack_clock_setup_sercom0();
 void hack_clock_setup_sercom1();
 void hack_clock_setup_sercom2();
+void hack_clock_setup_sercom3();
 void hack_clock_setup_adc();
 void hack_clock_setup_tcs();
 void hack_clock_setup_tcc0();

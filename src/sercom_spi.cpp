@@ -15,10 +15,12 @@ template<int N> void SercomSPI<N>::init(unsigned int dipo, unsigned int dopo) {
 	hack_clock_setup_sercom0();
 	hack_clock_setup_sercom1();
 	hack_clock_setup_sercom2();
+	hack_clock_setup_sercom3();
 
 	PM->APBCMASK.reg |= PM_APBCMASK_SERCOM0;
 	PM->APBCMASK.reg |= PM_APBCMASK_SERCOM1;
 	PM->APBCMASK.reg |= PM_APBCMASK_SERCOM2;
+	PM->APBCMASK.reg |= PM_APBCMASK_SERCOM3;
 
 	sercom_ptr->SPI.CTRLA.bit.SWRST = 1;
 	while (sercom_ptr->SPI.SYNCBUSY.bit.SWRST) {};
@@ -72,3 +74,4 @@ template<int N> void SercomSPI<N>::transfer(uint8_t *data, size_t length) {
 template class SercomSPI<0>;
 template class SercomSPI<1>;
 template class SercomSPI<2>;
+template class SercomSPI<3>;

@@ -3,18 +3,7 @@
 #include <stdbool.h>
 
 #include "sam.h"
-
-template<int N> constexpr Sercom * get_sercom_ptr() {
-	static_assert(N < 3);
-
-	if constexpr(N == 0) {
-		return SERCOM0;
-	} else if(N == 1) {
-		return SERCOM1;
-	} else if(N == 2) {
-		return SERCOM2;
-	}
-}
+#include "_internal_get_sercom.h"
 
 template<int N> class SercomUart {
 public:
