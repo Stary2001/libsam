@@ -14,8 +14,8 @@ public:
 	//void read();
 	//void write();
 	void transfer(uint8_t *data, size_t length);
-private:
 	void send_byte(uint8_t c);
+	uint8_t read_byte();
 };
 
 void spi_init();

@@ -51,8 +51,13 @@ template<int N> void SercomSPI<N>::init(unsigned int dipo, unsigned int dopo) {
 	// No sync if SPI is disabled
 
 	// Finally, enable in CTRLA
-	sercom_ptr->USART.CTRLA.bit.ENABLE = 1;
-	while (sercom_ptr->USART.SYNCBUSY.bit.ENABLE) {};
+	sercom_ptr->SPI.CTRLA.bit.ENABLE = 1;
+	while (sercom_ptr->SPI.SYNCBUSY.bit.ENABLE) {};
+}
+
+template<int N> uint8_t SercomSPI<N>::read_byte() {
+	while(!sercom_ptr->SPI.INTFLAG.bit.RXC) {};
+	return sercom_ptr->SPI.DATA.reg;
 }
 
 template<int N> void SercomSPI<N>::send_byte(uint8_t c) {
