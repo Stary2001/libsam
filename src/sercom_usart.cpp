@@ -70,13 +70,15 @@ template<int N> void SercomUart<N>::puts(const char *s) {
 }
 
 void uart_putchar(char c) {
-	(void)c;
-	// todo
+	// todo: make good
+	SercomUart<1> u;
+	u.putchar(c);
 }
 
-void uart_puts(const char *c) {
-	(void)c;
-	// todo
+void uart_puts(const char *s) {
+	// todo: make good
+	SercomUart<1> u;
+	u.puts(s);
 }
 
 
