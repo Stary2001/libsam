@@ -3,6 +3,17 @@ extern "C" {
 }
 #include "sam/serial_number.h"
 
+/*
+	10.3.3 Serial Number
+	Each device has a unique 128-bit serial number which is a concatenation of four 32-bit words contained at the
+	following addresses:
+	Word 0: 0x0080A00C
+	Word 1: 0x0080A040
+	Word 2: 0x0080A044
+	Word 3: 0x0080A048
+	The uniqueness of the serial number is guaranteed only when using all 128 bits.
+*/
+
 static uint32_t serial_storage[4] = {0};
 uint32_t *serial_get_raw() {
 	if(serial_storage[0] == 0) {
@@ -12,6 +23,11 @@ uint32_t *serial_get_raw() {
 		serial_storage[3] = *(uint32_t*)0x0080A048;
 	}
 	return serial_storage;
+}
+
+void serial_get_hash(uint8_t *hash_out) {
+	uint8_t *serial = (uint8_t*)serial_get_raw();
+	halfsiphash(serial, 16, serial, hash_out, 8);
 }
 
 const char *hex = "0123456789abcdef";
