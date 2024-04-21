@@ -112,6 +112,8 @@ extern "C" __attribute__((used)) void _exit() {
 
 uint64_t __gtod_millis = 0;
 extern "C" __attribute__((used)) int _gettimeofday (struct timeval *tp, void *tzp) {
+	(void) tzp;
+
 	tp->tv_sec = __gtod_millis / 1000;
 	tp->tv_usec = (__gtod_millis % 1000) * 1000;
 	return 0;
