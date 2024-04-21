@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <sys/time.h>
 #include "sam/sercom_usart.h"
 
 extern "C" __attribute__((used)) void _init() {
@@ -106,6 +107,28 @@ extern "C" __attribute__((used)) pid_t _getpid() {
 
 extern "C" __attribute__((used)) void _exit() {
 	uart_puts("in _exit\n");
+	while(true) {}
+}
+
+uint64_t __gtod_millis = 0;
+extern "C" __attribute__((used)) int _gettimeofday (struct timeval *tp, void *tzp) {
+	tp->tv_sec = __gtod_millis / 1000;
+	tp->tv_usec = (__gtod_millis % 1000) * 1000;
+	return 0;
+}
+
+extern "C" __attribute__((used)) void _open() {
+	uart_puts("in _open\n");
+	while(true) {}
+}
+
+extern "C" __attribute__((used)) void _unlink() {
+	uart_puts("in _unlink\n");
+	while(true) {}
+}
+
+extern "C" __attribute__((used)) void _link() {
+	uart_puts("in _link\n");
 	while(true) {}
 }
 
