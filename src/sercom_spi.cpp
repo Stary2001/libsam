@@ -11,16 +11,20 @@ static uint16_t baud_rate_reg_sync(uint32_t baud, uint32_t ref_clock) {
 	return ref_clock / (2*baud) - 1;
 }
 
-template<int N> void SercomSPI<N>::init(unsigned int dipo, unsigned int dopo) {
+template<int N> void SercomSPI<N>::init(unsigned int dipo, unsigned int dopo, unsigned int baud) {
 	hack_clock_setup_sercom0();
 	hack_clock_setup_sercom1();
 	hack_clock_setup_sercom2();
+#ifndef SAMD11
 	hack_clock_setup_sercom3();
+#endif
 
 	PM->APBCMASK.reg |= PM_APBCMASK_SERCOM0;
 	PM->APBCMASK.reg |= PM_APBCMASK_SERCOM1;
 	PM->APBCMASK.reg |= PM_APBCMASK_SERCOM2;
+#ifndef SAMD11
 	PM->APBCMASK.reg |= PM_APBCMASK_SERCOM3;
+#endif
 
 	sercom_ptr->SPI.CTRLA.bit.SWRST = 1;
 	while (sercom_ptr->SPI.SYNCBUSY.bit.SWRST) {};
@@ -45,7 +49,7 @@ template<int N> void SercomSPI<N>::init(unsigned int dipo, unsigned int dopo) {
 	sercom_ptr->SPI.CTRLB.reg = SERCOM_SPI_CTRLB_CHSIZE(0);
 
 	// set baud
-	sercom_ptr->SPI.BAUD.reg = baud_rate_reg_sync(100000, 8000000);
+	sercom_ptr->SPI.BAUD.reg = baud_rate_reg_sync(baud, 48000000);
 
 	sercom_ptr->SPI.CTRLB.reg |= SERCOM_SPI_CTRLB_RXEN;
 	// No sync if SPI is disabled

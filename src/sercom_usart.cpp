@@ -46,7 +46,7 @@ template<int N> void SercomUart<N>::init(unsigned int txpo, unsigned int rxpo) {
 	// sampr = 0 => 16x, arithmetic
 
 	// set baud
-	sercom_ptr->USART.BAUD.reg = baud_rate_reg(115200, 8000000);
+	sercom_ptr->USART.BAUD.reg = baud_rate_reg(115200, 48000000);
 
 	sercom_ptr->USART.CTRLB.reg |= SERCOM_USART_CTRLB_TXEN | SERCOM_USART_CTRLB_RXEN;
 	// No sync if uart is disabled

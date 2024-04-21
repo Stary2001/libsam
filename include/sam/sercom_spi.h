@@ -7,7 +7,7 @@
 
 template<int N> class SercomSPI {
 public:
-	void init(unsigned int dipo, unsigned int dopo);
+	void init(unsigned int dipo, unsigned int dopo, unsigned int baud);
 
 	Sercom *const sercom_ptr = get_sercom_ptr<N>();
 

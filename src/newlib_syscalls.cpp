@@ -6,7 +6,9 @@
 extern "C" __attribute__((used)) void _init() {
 }
 
-char fake_heap[4096];
+__attribute__((weak)) int __heap_size = 1;
+
+char fake_heap[__heap_size];
 static char *heap_start = fake_heap;
 static char *heap_end = NULL;
 

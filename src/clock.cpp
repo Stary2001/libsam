@@ -101,7 +101,7 @@ void hack_clock_setup_sercom0() {
 	/* Connect GCLK2 to SERCOM0 */
 	GCLK->CLKCTRL.reg =
 	    GCLK_CLKCTRL_CLKEN |
-	    GCLK_CLKCTRL_GEN_GCLK2 |
+	    GCLK_CLKCTRL_GEN_GCLK0 |
 	    GCLK_CLKCTRL_ID_SERCOM0_CORE;
 
 	/* Wait for the write to complete. */
@@ -111,7 +111,7 @@ void hack_clock_setup_sercom1() {
 	/* Connect GCLK2 to SERCOM1 */
 	GCLK->CLKCTRL.reg =
 	    GCLK_CLKCTRL_CLKEN |
-	    GCLK_CLKCTRL_GEN_GCLK2 |
+	    GCLK_CLKCTRL_GEN_GCLK0 |
 	    GCLK_CLKCTRL_ID_SERCOM1_CORE;
 
 	/* Wait for the write to complete. */
@@ -121,22 +121,25 @@ void hack_clock_setup_sercom2() {
 	/* Connect GCLK2 to SERCOM1 */
 	GCLK->CLKCTRL.reg =
 	    GCLK_CLKCTRL_CLKEN |
-	    GCLK_CLKCTRL_GEN_GCLK2 |
+	    GCLK_CLKCTRL_GEN_GCLK0 |
 	    GCLK_CLKCTRL_ID_SERCOM2_CORE;
 
 	/* Wait for the write to complete. */
 	while (GCLK->STATUS.bit.SYNCBUSY) {};
 }
+
+#ifndef SAMD11
 void hack_clock_setup_sercom3() {
 	/* Connect GCLK2 to SERCOM3 */
 	GCLK->CLKCTRL.reg =
 	    GCLK_CLKCTRL_CLKEN |
-	    GCLK_CLKCTRL_GEN_GCLK2 |
+	    GCLK_CLKCTRL_GEN_GCLK0 |
 	    GCLK_CLKCTRL_ID_SERCOM3_CORE;
 
 	/* Wait for the write to complete. */
 	while (GCLK->STATUS.bit.SYNCBUSY) {};
 }
+#endif
 void hack_clock_setup_adc() {
 	/* Connect GCLK2 to adc */
 	GCLK->CLKCTRL.reg =
