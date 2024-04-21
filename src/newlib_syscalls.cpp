@@ -6,14 +6,22 @@
 extern "C" __attribute__((used)) void _init() {
 }
 
-__attribute__((weak)) int __heap_size = 1;
-
-char fake_heap[__heap_size];
-static char *heap_start = fake_heap;
+static size_t heap_size = 0;
+static char *heap_start = NULL;
 static char *heap_end = NULL;
+
+void __init_heap(char *heap_ptr, size_t size) {
+	heap_start = heap_ptr;
+	heap_size = size;
+}
 
 extern "C" __attribute__((used)) void* _sbrk(ptrdiff_t incr) {
 	char *prev_heap_end;
+
+	if(heap_start == NULL) {
+		uart_puts("no fixed heap\r\n");
+		abort();
+	}
 
 	if(heap_end == NULL) {
 		heap_end = heap_start;
@@ -21,9 +29,9 @@ extern "C" __attribute__((used)) void* _sbrk(ptrdiff_t incr) {
 	prev_heap_end = heap_end;
 	heap_end += incr;
 
-	if((unsigned int)(heap_end - heap_start) > sizeof(fake_heap)) {
+	if((unsigned int)(heap_end - heap_start) > heap_size) {
 		// die
-		uart_puts("out of fixed heap\n");
+		uart_puts("out of fixed heap\r\n");
 		abort();
 	}
 
